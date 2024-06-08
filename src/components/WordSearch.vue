@@ -1,10 +1,14 @@
 <template>
   <div class="container">
     <div class="word-search">
-      <h1>Word Search</h1>
+      <h1 class="word-header">Word Search</h1>
       <div class="search-bar">
         <input type="text" v-model="query" @keyup.enter="searchWord" placeholder="enter a word" />
         <button @click="searchWord">search</button>
+      </div>
+
+      <div v-if="loading" class="loading">
+        <p>Loading...</p>
       </div>
 
       <div v-if="wordData" class="results">
@@ -14,7 +18,7 @@
         </div>
       </div>
 
-      <div v-if="error" class="error">
+      <div v-if="error && !loading" class="error">
         <p>{{ error }}</p>
       </div>
     </div>
@@ -30,12 +34,13 @@ export default {
       query: '',
       wordData: null,
       error: null,
+      loading: false,
     };
   },
   methods: {
     async searchWord() {
       if (!this.query) {
-        this.error = "please enter a word";
+        this.error = 'Please enter a word';
         this.wordData = null;
         return;
       }
@@ -48,13 +53,18 @@ export default {
         },
       };
 
+      this.wordData = null;
+      this.loading = true;
+      this.error = null;
+
       try {
-        this.error = null;
         const response = await axios.request(options);
         this.wordData = response.data;
       } catch (error) {
-        this.error = 'word not found or an error occurred';
+        this.error = 'Word not found or an error occurred';
         this.wordData = null;
+      } finally {
+        this.loading = false;
       }
     },
   },
@@ -62,19 +72,35 @@ export default {
 </script>
 
 <style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
-  padding-top: 10%;
+  padding-top: 10vh;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .word-search {
-  padding: 20px;
+  padding: 2em;
   text-align: center;
   width: 80%;
-  max-width: 500px;
+  max-width: 50rem;
+}
+
+.word-header {
+  color: #40434E;
+  font-size: 2.2rem;
+  animation: fadeIn 2400ms ease-in-out;
 }
 
 .search-bar {
@@ -85,49 +111,80 @@ export default {
 }
 
 .search-bar input {
-  margin: 10px;
-  padding: 10px;
+  background-color: #FFFFFA;
+  margin: 1em;
+  padding: 1em;
   border: 1px solid #ccc;
-  width: calc(100% - 100px);
+  width: calc(100% - 10em);
+  font-size: 1.2rem;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #912F40;
+  outline: none;
 }
 
 .search-bar button {
-  padding: 10px 25px;
+  padding: 1em 2.5em;
   border: none;
   background-color: #912F40;
   color: #FFFFFA;
-  border-radius: 5px;
+  border-radius: 0.5em;
   cursor: pointer;
-  margin: 10px;
+  margin: 1em;
+  font-size: 1.1rem;
+  transition: background-color 100ms ease, transform 300ms ease;
 }
 
 .search-bar button:hover {
   background-color: #702632;
+  transform: scale(1.05);
+}
+
+.loading {
+  margin-top: 2em;
+  font-size: 1.2rem;
+  animation: fadeIn 0,5s ease-in-out;
 }
 
 .results {
-  margin-top: 20px;
+  margin-top: 2em;
   text-align: left;
+  font-size: 1.2rem;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .error {
-  margin-top: 20px;
+  margin-top: 2em;
   color: #ca4d4d;
+  font-size: 1.2rem;
+  animation: fadeIn 300ms ease-in-out;
 }
 
 @media (max-width: 600px) {
   .word-search {
     width: 95%;
-    padding: 15px;
+    padding: 1.5em;
   }
 
   .search-bar input {
     width: 100%;
+    font-size: 1rem;
   }
 
   .search-bar button {
     width: 100%;
-    margin: 10px 0;
+    margin: 1em 0;
+    font-size: 1rem;
+  }
+
+  .word-header {
+    font-size: 2rem;
+  }
+
+  .results, .error {
+    font-size: 1rem;
   }
 }
 </style>
