@@ -1,18 +1,16 @@
 <template>
   <div id="app">
     <TopBar />
-    <WordSearch />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import WordSearch from './components/WordSearch.vue';
 import TopBar from './components/TopBar.vue';
 
 export default {
   name: 'App',
   components: {
-    WordSearch,
     TopBar
   }
 }
@@ -21,7 +19,7 @@ export default {
 <style>
 @import url('https://fonts.cdnfonts.com/css/satoshi');
   body {
-    background-color: #FFFFFA;
+    background-color: #2F184B;
     margin: 0;
     font-family: 'Satoshi', sans-serif;
   }

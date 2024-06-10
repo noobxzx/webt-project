@@ -1,11 +1,11 @@
 <template>
   <header class="top-bar">
-    <div class="logo">Meower</div>
+    <div class="logo">Worod</div>
     <nav class="nav-buttons">
-      <button class="nav-button" @click="navigate('About')">
+      <button class="nav-button" @click="navigate('/about')">
         <i class="fas fa-info-circle"></i>
       </button>
-      <button class="nav-button" @click="navigate('Account')">
+      <button class="nav-button" @click="navigate('/account')">
         <i class="fas fa-user"></i>
       </button>
     </nav>
@@ -14,32 +14,42 @@
 
 <script>
 export default {
-  name: 'TopBar',
+  name: "TopBar",
   methods: {
     navigate(destination) {
-      console.log(`Navigating to ${destination}`);
-    }
-  }
-}
+      this.$router.push(destination);
+    },
+  },
+};
 </script>
 
 <style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 :root {
-  font-size: 16px; /* Base font size */
+  font-size: 16px;
 }
 
 .top-bar {
+  background-color: #2f184b;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1em 2em;
-  background-color: #FFFFFA;
+  animation: fadeIn 1.7s ease-in-out;
 }
 
 .logo {
+  color: #f4effa;
   font-size: 1.75rem;
   font-weight: bold;
-  color: #40434E;
 }
 
 .nav-buttons {
@@ -48,9 +58,9 @@ export default {
 }
 
 .nav-button {
+  color: #f4effa;
   background-color: transparent;
   border: none;
-  color: #080705;
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.75em 1em;
@@ -63,8 +73,8 @@ export default {
 }
 
 .nav-button:hover {
-  background-color: #40434E;
-  color: #FFFFFA;
+  background-color: #532b88;
+  color: #f4effa;
 }
 
 @media (max-width: 600px) {

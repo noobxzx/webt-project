@@ -1,9 +1,18 @@
 <template>
   <div class="container">
     <div class="word-search">
-      <h1 class="word-header">Word Search</h1>
+      <h1 class="word-header">Word Definition</h1>
       <div class="search-bar">
-        <input type="text" v-model="query" @keyup.enter="searchWord" placeholder="enter a word" />
+        <input
+          type="text"
+          v-model="query"
+          @keyup="validateInput"
+          @keyup.enter="searchWord"
+          placeholder="enter a word"
+        />
+        <div v-if="validationError" class="validation-error">
+          <p>{{ validationError }}</p>
+        </div>
         <button @click="searchWord">search</button>
       </div>
 
@@ -13,8 +22,12 @@
 
       <div v-if="wordData" class="results">
         <h2>{{ wordData.word }}</h2>
+        <h3>definitions:</h3>
         <div v-for="(definition, index) in wordData.results" :key="index">
-          <p><strong>{{ definition.partOfSpeech }}</strong>: {{ definition.definition }}</p>
+          <p>
+            <strong>{{ definition.partOfSpeech }}</strong
+            >: {{ definition.definition }}
+          </p>
         </div>
       </div>
 
@@ -26,30 +39,40 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
-      query: '',
+      query: "",
       wordData: null,
       error: null,
+      validationError: null,
       loading: false,
     };
   },
   methods: {
+    validateInput() {
+      const regex = /^[a-zA-Z0-9 ]*$/;
+      if (!regex.test(this.query)) {
+        this.validationError = "Only A-Z symbols are allowed";
+      } else {
+        this.validationError = null;
+      }
+    },
     async searchWord() {
       if (!this.query) {
-        this.error = 'Please enter a word';
+        this.error = "Please enter a word";
         this.wordData = null;
         return;
       }
       const options = {
-        method: 'GET',
+        method: "GET",
         url: `https://wordsapiv1.p.rapidapi.com/words/${this.query}`,
         headers: {
-          'x-rapidapi-key': '5cac514b7bmshbe5ace51218acb9p1ec6e8jsn9c45a2af52fa',
-          'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+          "x-rapidapi-key":
+            "5cac514b7bmshbe5ace51218acb9p1ec6e8jsn9c45a2af52fa",
+          "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
         },
       };
 
@@ -59,9 +82,15 @@ export default {
 
       try {
         const response = await axios.request(options);
-        this.wordData = response.data;
+        if (response.status === 200 && response.data) {
+          this.wordData = response.data;
+        }
       } catch (error) {
-        this.error = 'Word not found or an error occurred';
+        if (error.response && error.response.status === 404) {
+          this.error = "Word not found!";
+        } else {
+          this.error = "An error occurred while fetching the word data.";
+        }
         this.wordData = null;
       } finally {
         this.loading = false;
@@ -72,6 +101,14 @@ export default {
 </script>
 
 <style scoped>
+.validation-error {
+  position: absolute;
+  color: #ca4d4d;
+  font-size: 1rem;
+  width: 100%;
+  text-align: left;
+  margin-top: 0.5em;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -91,14 +128,16 @@ export default {
 }
 
 .word-search {
+  justify-content: center;
   padding: 2em;
   text-align: center;
   width: 80%;
   max-width: 50rem;
+  position: relative;
 }
 
 .word-header {
-  color: #40434E;
+  color: #f4effa;
   font-size: 2.2rem;
   animation: fadeIn 2400ms ease-in-out;
 }
@@ -108,47 +147,61 @@ export default {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .search-bar input {
-  background-color: #FFFFFA;
+  color: #9b72cf;
+  background-color: #2f184b;
   margin: 1em;
   padding: 1em;
-  border: 1px solid #ccc;
+  border: 1px solid #532b88;
+  border-radius: 0.5em;
   width: calc(100% - 10em);
   font-size: 1.2rem;
   transition: border-color 0.3s ease;
 }
 
+input::placeholder {
+  color: #9b72cf;
+}
+
 .search-bar input:focus {
-  border-color: #912F40;
+  border-color: #9b72cf;
+  color: #f4effa;
   outline: none;
 }
 
 .search-bar button {
+  background-color: #532b88;
+  color: #f4effa;
   padding: 1em 2.5em;
   border: none;
-  background-color: #912F40;
-  color: #FFFFFA;
   border-radius: 0.5em;
   cursor: pointer;
   margin: 1em;
   font-size: 1.1rem;
-  transition: background-color 100ms ease, transform 300ms ease;
+  transition:
+    background-color 100ms ease,
+    transform 300ms ease;
 }
 
 .search-bar button:hover {
-  background-color: #702632;
+  background-color: #9b72cf;
   transform: scale(1.05);
 }
 
 .loading {
+  color: #9b72cf;
   margin-top: 2em;
   font-size: 1.2rem;
-  animation: fadeIn 0,5s ease-in-out;
+  animation:
+    fadeIn 0,
+    5s ease-in-out;
 }
 
 .results {
+  color: #f4effa;
   margin-top: 2em;
   text-align: left;
   font-size: 1.2rem;
@@ -156,8 +209,8 @@ export default {
 }
 
 .error {
-  margin-top: 2em;
   color: #ca4d4d;
+  margin-top: 2em;
   font-size: 1.2rem;
   animation: fadeIn 300ms ease-in-out;
 }
@@ -174,7 +227,7 @@ export default {
   }
 
   .search-bar button {
-    width: 100%;
+    width: 70%;
     margin: 1em 0;
     font-size: 1rem;
   }
@@ -183,7 +236,8 @@ export default {
     font-size: 2rem;
   }
 
-  .results, .error {
+  .results,
+  .error {
     font-size: 1rem;
   }
 }
