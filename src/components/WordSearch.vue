@@ -40,6 +40,7 @@
 
 <script>
 import axios from "axios";
+import DOMPurify from "dompurify";
 
 export default {
   data() {
@@ -49,13 +50,14 @@ export default {
       error: null,
       validationError: null,
       loading: false,
+      token: process.env.VUE_APP_RAPIDAPI_KEY
     };
   },
   methods: {
     validateInput() {
       const regex = /^[a-zA-Z0-9 ]*$/;
       if (!regex.test(this.query)) {
-        this.validationError = "Only A-Z symbols are allowed";
+        this.validationError = "Only eng and 0-9 symbols are allowed";
       } else {
         this.validationError = null;
       }
@@ -66,16 +68,19 @@ export default {
         this.wordData = null;
         return;
       }
+      if (this.validationError){
+        this.error = "Please enter a valid word";
+        return
+      }
+      const sanitizedQuery = DOMPurify.sanitize(this.query);
       const options = {
         method: "GET",
-        url: `https://wordsapiv1.p.rapidapi.com/words/${this.query}`,
+        url: `https://wordsapiv1.p.rapidapi.com/words/${sanitizedQuery}`,
         headers: {
-          "x-rapidapi-key":
-            "5cac514b7bmshbe5ace51218acb9p1ec6e8jsn9c45a2af52fa",
+          "x-rapidapi-key": this.token,
           "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
         },
       };
-
       this.wordData = null;
       this.loading = true;
       this.error = null;
@@ -101,14 +106,6 @@ export default {
 </script>
 
 <style scoped>
-.validation-error {
-  position: absolute;
-  color: #ca4d4d;
-  font-size: 1rem;
-  width: 100%;
-  text-align: left;
-  margin-top: 0.5em;
-}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -123,7 +120,7 @@ export default {
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
-  padding-top: 10vh;
+  padding-top: 6vh;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -170,6 +167,16 @@ input::placeholder {
   border-color: #9b72cf;
   color: #f4effa;
   outline: none;
+}
+
+.validation-error {
+  position: absolute;
+  color: #ca4d4d;
+  font-size: 1rem;
+  width: 100%;
+  text-align: left;
+  left: 5em;
+  margin-top: 0.5em;
 }
 
 .search-bar button {

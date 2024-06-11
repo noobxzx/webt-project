@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <h1>About Page</h1>
-    <p>This is the about page.</p>
+    <h1 class = "header-about">About Page</h1>
+    <p class = "text-about">This is the about page.</p>
   </div>
 </template>
 
@@ -14,5 +14,14 @@ export default {
 <style scoped>
 .about {
   padding: 2em;
+  justify-content: center;
+}
+
+.header-about{
+  color: #f4effa;
+}
+
+.text-about{
+  color: #f4effa;
 }
 </style>
