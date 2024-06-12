@@ -1,40 +1,43 @@
-<script>
-  export default {
-    name: "top-rectangle",
-    data() {
-      return {
-        showDropdown: false,
-      };
-    },
-    methods: {
-      navigate(destination) {
-        this.$router.push(destination);
-        this.showDropdown = false;
-      },
-      toggleDropdown() {
-        this.showDropdown = !this.showDropdown;
-      }
-    },
-  };
-</script>
-
 <template>
-  <div class = "rectangle">
+  <div class="rectangle">
     <nav class="nav-buttons">
-      <button class = "nav-button" @click="navigate('/')">definitions</button>
-      <button class = "nav-button" @click="navigate('/antonyms')">antonyms</button>
-      <button class = "nav-button" @click="navigate('/synonyms')">synonyms</button>
-      <button class = "nav-button" @click="navigate('/local-words')">local-words</button>
+      <button class="nav-button" @click="navigate('/')">definitions</button>
+      <button class="nav-button" @click="navigate('/quiz')">antonyms</button>
+      <button class="nav-button" @click="navigate('/copters')">copters</button>
+      <button class="nav-button" @click="navigate('/local-words')">pics</button>
     </nav>
     <button class="dropdown-button" @click="toggleDropdown">menu</button>
-    <div v-if="showDropdown" class="dropdown-menu">
-      <button class="dropdown-item" @click="navigate('/')">definitions</button>
-      <button class="dropdown-item" @click="navigate('/antonyms')">antonyms</button>
-      <button class="dropdown-item" @click="navigate('/synonyms')">synonyms</button>
-      <button class="dropdown-item" @click="navigate('/local-words')">local-words</button>
+    <div v-if="showDropdown" class="dropdown-menu" @click.self="toggleDropdown">
+      <div class="dropdown-content">
+        <button class="dropdown-item" @click="navigate('/')">definitions</button>
+        <button class="dropdown-item" @click="navigate('/quiz')">antonyms</button>
+        <button class="dropdown-item" @click="navigate('/copter')">copters</button>
+        <button class="dropdown-item" @click="navigate('/pics')">pics</button>
+      </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "GamesBar",
+  data() {
+    return {
+      showDropdown: false,
+    };
+  },
+  methods: {
+    navigate(destination) {
+      this.$router.push(destination);
+      this.showDropdown = false;
+    },
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+  },
+};
+</script>
+
 
 <style scoped>
 @keyframes fadeIn {
@@ -45,28 +48,30 @@
     opacity: 1;
   }
 }
-.rectangle{
+
+.rectangle {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   border-radius: 1em;
   border: 1px solid #532b88;
   background-color: transparent;
   width: 70%;
   max-width: 900px;
-  height: 55px;
+  height: 52px;
   margin-top: 2vh;
   padding: 0 1em;
   transition: all 0.3s ease-in-out;
 }
 
-.nav-buttons{
+.nav-buttons {
   display: flex;
-  align-items: center;
+  justify-content: space-around;
   width: 100%;
 }
 
-.nav-button{
+.nav-button {
   flex: 1;
   height: 100%;
   border: none;
@@ -92,7 +97,7 @@
   display: none;
 }
 
-.nav-button:hover{
+.nav-button:hover {
   color: #f4effa;
   transition: color 0.4s ease;
 }
@@ -105,7 +110,6 @@
   border-radius: 0.5em;
   padding: 0.5em 1em;
   font-size: 1.1rem;
-  cursor: pointer;
 }
 
 .dropdown-button:hover {
@@ -114,11 +118,26 @@
 }
 
 .dropdown-menu {
-  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.dropdown-content {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  margin-top: 0.5em;
+  width: 80%;
+  max-width: 300px;
 }
 
 .dropdown-item {
@@ -127,39 +146,41 @@
   border: none;
   border-radius: 0.5em;
   margin: 0.5em 0;
-  background-color: transparent;
+  background-color: #532b88;
   color: #9b72cf;
   font-size: 1.1rem;
+  text-align: center;
 }
 
 .dropdown-item:hover {
+  background-color: #532b88;
   color: #f4effa;
-  transition: color 0.4s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 @media (max-width: 900px) {
   .rectangle {
-    width: 80%;
+    width: 75%;
     height: 45px;
   }
 }
 
 @media (max-width: 500px) {
   .rectangle {
-    width: 60%;
+    width: 40%;
     height: 40px;
     margin-top: 25px;
     border-radius: 0.4em;
   }
+
   .nav-buttons {
     display: none;
   }
+
   .dropdown-button {
-    display: block;
-  }
-  .dropdown-menu {
     display: flex;
-    animation: fadeIn 0.3s ease-in-out;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -168,5 +189,4 @@
     height: 40px;
   }
 }
-
 </style>

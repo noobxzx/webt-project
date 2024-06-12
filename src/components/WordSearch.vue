@@ -120,7 +120,7 @@ export default {
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
-  padding-top: 6vh;
+  padding-top: 5vh;
   animation: fadeIn 1s ease-in-out;
 }
 
