@@ -4,7 +4,7 @@
       <button class="nav-button" @click="navigate('/')">definitions</button>
       <button class="nav-button" @click="navigate('/quiz')">antonyms</button>
       <button class="nav-button" @click="navigate('/copters')">copters</button>
-      <button class="nav-button" @click="navigate('/local-words')">pics</button>
+      <button class="nav-button" @click="navigate('/cats')">cats</button>
     </nav>
     <button class="dropdown-button" @click="toggleDropdown">menu</button>
     <div v-if="showDropdown" class="dropdown-menu" @click.self="toggleDropdown">
@@ -12,7 +12,7 @@
         <button class="dropdown-item" @click="navigate('/')">definitions</button>
         <button class="dropdown-item" @click="navigate('/quiz')">antonyms</button>
         <button class="dropdown-item" @click="navigate('/copter')">copters</button>
-        <button class="dropdown-item" @click="navigate('/pics')">pics</button>
+        <button class="dropdown-item" @click="navigate('/cats')">cats</button>
       </div>
     </div>
   </div>

@@ -2,9 +2,9 @@
   <div id="app">
     <TopBar />
     <div class="center-container">
-      <Rectangle @change-type="changeQuizType" />
+      <Rectangle/>
     </div>
-    <router-view :type="quizType"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -17,16 +17,6 @@ export default {
   components: {
     TopBar,
     Rectangle
-  },
-  data() {
-    return {
-      quizType: 'synonyms',
-    };
-  },
-  methods: {
-    changeQuizType(type) {
-      this.quizType = type;
-    }
   }
 }
 </script>
