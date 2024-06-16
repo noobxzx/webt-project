@@ -1,29 +1,30 @@
 <template>
-  <div class="container">
+  <div class="custom-container">
     <div class="word-search">
       <h1 class="word-header">Word Definition</h1>
       <div class="search-bar">
         <input
-          type="text"
-          v-model="query"
-          @keyup="validateInput"
-          @keyup.enter="searchWord"
-          placeholder="enter a word"
+            type="text"
+            class="custom-input"
+            v-model="query"
+            @keyup="validateInput"
+            @keyup.enter="searchWord"
+            placeholder="enter a word"
         />
         <div v-if="validationError" class="validation-error">
           <p>{{ validationError }}</p>
         </div>
-        <button @click="searchWord">search</button>
+        <button class="custom-button" @click="searchWord">search</button>
       </div>
 
       <div v-if="loading" class="loading">
         <p>Loading...</p>
       </div>
 
-      <div v-if="wordData" class="results">
+      <div v-if="wordData" class="results card-body">
         <h2>{{ wordData.word }}</h2>
-        <h3>definitions:</h3>
-        <div v-for="(definition, index) in wordData.results" :key="index">
+        <h3>Definitions:</h3>
+        <div v-for="(definition, index) in wordData.results" :key="index" class="definition">
           <p>
             <strong>{{ definition.partOfSpeech }}</strong
             >: {{ definition.definition }}
@@ -115,7 +116,7 @@ export default {
   }
 }
 
-.container {
+.custom-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -147,23 +148,25 @@ export default {
   position: relative;
 }
 
-.search-bar input {
+.custom-input {
   color: #9b72cf;
   background-color: #2f184b;
-  margin: 1em;
+  margin-bottom: 2em;
+  margin-top: 2em;
   padding: 1em;
   border: 1px solid #532b88;
   border-radius: 0.5em;
-  width: calc(100% - 10em);
+  width: calc(100% - 1em);
   font-size: 1.2rem;
   transition: border-color 0.3s ease;
 }
 
-input::placeholder {
+.custom-input::placeholder {
   color: #9b72cf;
+  font-size: 1.2rem;
 }
 
-.search-bar input:focus {
+.custom-input:focus {
   border-color: #9b72cf;
   color: #f4effa;
   outline: none;
@@ -175,25 +178,25 @@ input::placeholder {
   font-size: 1rem;
   width: 100%;
   text-align: left;
-  left: 5em;
-  margin-top: 0.5em;
+  margin-top: 1em;
+  left: 1em
 }
 
-.search-bar button {
+.custom-button {
   background-color: #532b88;
   color: #f4effa;
-  padding: 1em 2.5em;
+  padding: 1em 2.8em;
   border: none;
   border-radius: 0.5em;
   cursor: pointer;
   margin: 1em;
   font-size: 1.1rem;
   transition:
-    background-color 100ms ease,
-    transform 300ms ease;
+      background-color 100ms ease,
+      transform 300ms ease;
 }
 
-.search-bar button:hover {
+.custom-button:hover {
   background-color: #9b72cf;
   transform: scale(1.05);
 }
@@ -203,17 +206,25 @@ input::placeholder {
   margin-top: 2em;
   font-size: 1.2rem;
   animation:
-    fadeIn 0,
-    5s ease-in-out;
+      fadeIn 0,
+      5s ease-in-out;
 }
 
 .results {
   color: #f4effa;
   margin-top: 2em;
+  margin-left: 1em;
   text-align: left;
   font-size: 1.2rem;
   animation: fadeIn 1s ease-in-out;
 }
+
+.definition {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
 
 .error {
   color: #ca4d4d;
@@ -228,12 +239,12 @@ input::placeholder {
     padding: 1.5em;
   }
 
-  .search-bar input {
+  .search-bar .custom-input {
     width: 100%;
     font-size: 1rem;
   }
 
-  .search-bar button {
+  .search-bar .custom-button {
     width: 70%;
     margin: 1em 0;
     font-size: 1rem;

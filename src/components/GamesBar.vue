@@ -2,16 +2,16 @@
   <div class="rectangle">
     <nav class="nav-buttons">
       <button class="nav-button" @click="navigate('/')">definitions</button>
-      <button class="nav-button" @click="navigate('/quiz')">antonyms</button>
-      <button class="nav-button" @click="navigate('/copters')">copters</button>
+      <button class="nav-button" @click="navigate('/quiz')">quiz</button>
+      <button class="nav-button" @click="navigate('/xxx')">xxx</button>
       <button class="nav-button" @click="navigate('/cats')">cats</button>
     </nav>
     <button class="dropdown-button" @click="toggleDropdown">menu</button>
     <div v-if="showDropdown" class="dropdown-menu" @click.self="toggleDropdown">
       <div class="dropdown-content">
         <button class="dropdown-item" @click="navigate('/')">definitions</button>
-        <button class="dropdown-item" @click="navigate('/quiz')">antonyms</button>
-        <button class="dropdown-item" @click="navigate('/copter')">copters</button>
+        <button class="dropdown-item" @click="navigate('/quiz')">quiz</button>
+        <button class="dropdown-item" @click="navigate('/xxx')">xxx</button>
         <button class="dropdown-item" @click="navigate('/cats')">cats</button>
       </div>
     </div>
@@ -60,7 +60,7 @@ export default {
   width: 70%;
   max-width: 900px;
   height: 52px;
-  margin-top: 2vh;
+  margin-top: 3vh;
   padding: 0 1em;
   transition: all 0.3s ease-in-out;
 }
@@ -81,6 +81,7 @@ export default {
   background-color: transparent;
   color: #9b72cf;
   position: relative;
+  cursor: pointer;
 }
 
 .nav-button::after {

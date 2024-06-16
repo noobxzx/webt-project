@@ -2,10 +2,10 @@
   <header class="top-bar">
     <div class="logo">Worod</div>
     <nav class="nav-buttons">
-      <button class="nav-button" @click="navigate('/about')">
+      <button class="btn btn-link nav-button" @click="navigate('/about')">
         <i class="fas fa-info-circle"></i>
       </button>
-      <button class="nav-button" @click="navigate('/account')">
+      <button class="btn btn-link nav-button" @click="navigate('/account')">
         <i class="fas fa-user"></i>
       </button>
     </nav>
@@ -48,7 +48,7 @@ export default {
 
 .logo {
   color: #f4effa;
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 

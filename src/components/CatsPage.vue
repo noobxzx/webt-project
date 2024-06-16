@@ -4,14 +4,16 @@
     <div class="search-bar">
       <button class="regenerate-button" @click="regenerateBreeds">Regenerate</button>
     </div>
-    <ul class="breed-list">
-      <li v-for="(breed, index) in randomBreeds" :key="index">
-        <button class="breed-button" @click="getMoreInfo(breed.id)">{{ breed.name }}</button>
-      </li>
-    </ul>
-    <div v-if="showDropdown" class="dropdown-menu" @click="closeDropdown">
-      <div class="dropdown-content" @click.stop>
-        <img class="drop-item" :src="breedInfo.url" :alt="breedInfo.name" v-if="breedInfo">
+    <div class="buttons">
+      <ul class="breed-list">
+        <li v-for="(breed, index) in randomBreeds" :key="index">
+          <button class="breed-button" @click="GetPreview(breed.id)">{{ breed.name }}</button>
+        </li>
+      </ul>
+      <div v-if="showDropdown" class="dropdown-menu" @click="closeDropdown">
+        <div class="dropdown-content" @click.stop>
+          <img class="drop-item" :src="breedInfo.url" :alt="breedInfo.name" v-if="breedInfo">
+        </div>
       </div>
     </div>
   </div>
@@ -46,7 +48,7 @@ export default {
     regenerateBreeds() {
       this.randomBreeds = this.breeds.sort(() => 0.5 - Math.random()).slice(0, 5);
     },
-    async getMoreInfo(id) {
+    async GetPreview(id) {
       try {
         const response = await axios.get('https://api.thecatapi.com/v1/images/search', {
           params: {
@@ -81,7 +83,7 @@ export default {
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  padding-top: 8vh;
+  padding-top: 7.2vh;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -97,54 +99,71 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   position: relative;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2vh;
+  width: 100%;
 }
 
 .regenerate-button {
-  background-color: #532b88;
+  background-color: transparent;
   color: #f4effa;
-  padding: 1em 2.5em;
-  border: none;
+  padding: 1em 2.8em;
+  border: 1px solid #532b88;
   border-radius: 0.5em;
   cursor: pointer;
-  margin: 1em;
+  margin: 2em;
   font-size: 1.1rem;
   transition: background-color 100ms ease, transform 300ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .regenerate-button:hover {
-  background-color: #9b72cf;
-  transform: scale(1.05);
+  transform: scale(1.07);
 }
 
 .breed-list {
   list-style-type: none;
-  padding: 0;
-  margin: 1em 0;
-  width: 100%;
-  text-align: center;
-  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
   animation: fadeIn 1s ease-in-out;
+  flex-wrap: wrap;
 }
 
 .breed-list li {
-  margin: 10px 0;
-  display: flex;
+  text-align: center;
+  align-items: center;
   justify-content: center;
+  display: flex;
+  margin: 10px 0;
 }
 
 .breed-button {
-  background-color: #532b88;
-  color: #fff;
+  background-color: #421a6b;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  color: #f4effa;
+  border-radius: 0.5em;
+  padding: 15px 50px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .breed-button:hover {
   background-color: #421a6b;
+  transform: scale(1.07);
 }
 
 .dropdown-menu {
@@ -185,6 +204,13 @@ export default {
     font-size: 2rem;
   }
 
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
   .breed-button,
   .regenerate-button {
     width: 70%;
@@ -194,6 +220,8 @@ export default {
 
   .breed-list {
     font-size: 1rem;
+    flex-direction: column;
+    align-items: center;
   }
 
   .dropdown-content {
@@ -201,4 +229,3 @@ export default {
   }
 }
 </style>
-

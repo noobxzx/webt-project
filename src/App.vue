@@ -23,8 +23,8 @@ export default {
 
 <style>
 @import url('https://fonts.cdnfonts.com/css/satoshi');
-body {
-  background-color: #2F184B;
+html, body {
+  background-color: #2f184b !important;
   margin: 0;
   height: 100vh;
   font-family: 'Satoshi', sans-serif;
