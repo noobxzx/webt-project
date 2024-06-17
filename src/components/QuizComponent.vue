@@ -1,17 +1,25 @@
 <template>
-  <div class="container text-center d-flex flex-column align-items-center justify-content-center vh-100 pt-5">
-    <h1 class="quiz-header custom-mb">Quiz Time</h1>
+  <div class="container text-center d-flex flex-column align-items-center vh-100 pt-5">
+    <h1 class="quiz-header mt-5 custom-mb">Quiz Time</h1>
+    <div class="score-board">
+      Question {{ currentQuestionIndex + 1 }}/{{ questions.length }} | Score: {{ score }}
+    </div>
     <div class="quiz-content custom-mb d-flex flex-column align-items-center">
       <div v-if="loading" class="loading">Loading...</div>
       <div v-else>
         <div v-if="!showResults">
-          <div class="question custom-mb">{{ currentQuestion.question }}</div>
+          <div class="question custom-mb">{{ decodeHTMLEntities(currentQuestion.question)}}</div>
           <div class="answers custom-mb">
             <button
                 v-for="(answer, index) in currentAnswers"
                 :key="index"
-                class="btn answer-button"
+                :class="['btn', 'answer-button',
+                showNextButton && answer === currentQuestion.correct_answer ? 'btn-success' : '',
+                showNextButton && answer === selectedAnswer && selectedAnswer !== currentQuestion.correct_answer && answer === selectedAnswer ? 'btn-danger' : '',
+                showNextButton && answer !== selectedAnswer && answer !== currentQuestion.correct_answer ? 'btn-default' : ''
+              ]"
                 @click="selectAnswer(answer)"
+                :disabled="showNextButton"
             >{{ answer }}</button>
           </div>
           <button class="btn next-button" @click="nextQuestion" v-if="showNextButton">Next</button>
@@ -39,6 +47,8 @@ export default {
       showNextButton: false,
       showResults: false,
       score: 0,
+      selectedAnswer: null,
+      isCorrect: false,
     };
   },
   created() {
@@ -47,7 +57,7 @@ export default {
   methods: {
     async fetchQuestions() {
       try {
-        const response = await axios.get('https://opentdb.com/api.php?amount=10&type=multiple');
+        const response = await axios.get('https://opentdb.com/api.php?amount=10&category=27');
         this.questions = response.data.results;
         this.setCurrentQuestion();
         this.loading = false;
@@ -60,9 +70,13 @@ export default {
       this.currentAnswers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer].sort(
           () => 0.5 - Math.random()
       );
+      this.selectedAnswer = null;
+      this.isCorrect = false;
     },
     selectAnswer(answer) {
-      if (answer === this.currentQuestion.correct_answer) {
+      this.selectedAnswer = answer;
+      this.isCorrect = answer === this.currentQuestion.correct_answer;
+      if (this.isCorrect) {
         this.score++;
       }
       this.showNextButton = true;
@@ -82,7 +96,12 @@ export default {
       this.showResults = false;
       this.setCurrentQuestion();
       this.showNextButton = false;
-    }
+    },
+    decodeHTMLEntities(text) {
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = text;
+      return textarea.value;
+    },
   }
 };
 </script>
@@ -105,6 +124,14 @@ export default {
   color: #f4effa;
   font-size: 2.2rem;
   animation: fadeIn 2400ms ease-in-out;
+}
+
+.score-board {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #f4effa;
+  font-size: 1.2rem;
 }
 
 .quiz-content {
@@ -141,10 +168,38 @@ export default {
   justify-content: center;
 }
 
-.answer-button:hover {
+.answer-button.btn-default {
+  background-color: #273469 !important;
+  color: #f4effa !important;
+}
+
+.answer-button:not(.btn-success):not(.btn-danger):hover {
   background-color: transparent;
   border: 1px solid #273469;
+  color: #f4effa;
   transform: scale(1.07);
+}
+
+.answer-button.btn-success {
+  background-color: green !important;
+  color: white !important;
+}
+
+.answer-button.btn-danger {
+  background-color: red !important;
+  color: white !important;
+}
+
+.answer-button.btn-success:hover {
+  background-color: green !important;
+  border: none;
+  transform: none;
+}
+
+.answer-button.btn-danger:hover {
+  background-color: red !important;
+  border: none;
+  transform: none;
 }
 
 .next-button,
@@ -167,6 +222,8 @@ export default {
 .restart-button:hover {
   background-color: transparent;
   transform: scale(1.07);
+  color: #f4effa;
+  border: 1px solid #273469;
 }
 
 .results {
@@ -193,6 +250,12 @@ export default {
   .restart-button {
     width: 70%;
     margin: 1em 0;
+    font-size: 1rem;
+  }
+
+  .score-board {
+    top: 10px;
+    right: 10px;
     font-size: 1rem;
   }
 }

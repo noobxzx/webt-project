@@ -38,7 +38,7 @@ export default {
 }
 
 .top-bar {
-  background-color: #1e2749;
+  background-color: #1a2240 !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
