@@ -38,7 +38,7 @@ export default {
 }
 
 .top-bar {
-  background-color: #2f184b;
+  background-color: #1e2749;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +47,7 @@ export default {
 }
 
 .logo {
-  color: #f4effa;
+  color: #fafaff;
   font-size: 2rem;
   font-weight: bold;
 }
@@ -58,7 +58,7 @@ export default {
 }
 
 .nav-button {
-  color: #f4effa;
+  color: #fafaff;
   background-color: transparent;
   border: none;
   font-size: 1.25rem;
@@ -73,7 +73,7 @@ export default {
 }
 
 .nav-button:hover {
-  background-color: #532b88;
+  background-color: #273469;
   color: #f4effa;
 }
 

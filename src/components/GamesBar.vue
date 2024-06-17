@@ -3,7 +3,6 @@
     <nav class="nav-buttons">
       <button class="nav-button" @click="navigate('/')">definitions</button>
       <button class="nav-button" @click="navigate('/quiz')">quiz</button>
-      <button class="nav-button" @click="navigate('/xxx')">xxx</button>
       <button class="nav-button" @click="navigate('/cats')">cats</button>
     </nav>
     <button class="dropdown-button" @click="toggleDropdown">menu</button>
@@ -11,7 +10,6 @@
       <div class="dropdown-content">
         <button class="dropdown-item" @click="navigate('/')">definitions</button>
         <button class="dropdown-item" @click="navigate('/quiz')">quiz</button>
-        <button class="dropdown-item" @click="navigate('/xxx')">xxx</button>
         <button class="dropdown-item" @click="navigate('/cats')">cats</button>
       </div>
     </div>
@@ -55,7 +53,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 1em;
-  border: 1px solid #532b88;
+  border: 1px solid #273469;
   background-color: transparent;
   width: 70%;
   max-width: 900px;
@@ -79,7 +77,7 @@ export default {
   margin: 0 0.5em;
   font-size: 1.1rem;
   background-color: transparent;
-  color: #9b72cf;
+  color: #fafaff;
   position: relative;
   cursor: pointer;
 }
@@ -91,7 +89,7 @@ export default {
   right: -0.5em;
   width: 1px;
   height: 100%;
-  background-color: #532b88;
+  background-color: #2a628f;
 }
 
 .nav-button:last-child::after {
@@ -99,14 +97,14 @@ export default {
 }
 
 .nav-button:hover {
-  color: #f4effa;
+  color: #e8d7f1;
   transition: color 0.4s ease;
 }
 
 .dropdown-button {
   display: none;
   background-color: transparent;
-  color: #9b72cf;
+  color: #fafaff;
   border: none;
   border-radius: 0.5em;
   padding: 0.5em 1em;
@@ -114,7 +112,7 @@ export default {
 }
 
 .dropdown-button:hover {
-  color: #f4effa;
+  color: #e4d9ff;
   transition: color 0.4s ease;
 }
 
@@ -147,15 +145,15 @@ export default {
   border: none;
   border-radius: 0.5em;
   margin: 0.5em 0;
-  background-color: #532b88;
-  color: #9b72cf;
+  background-color: #273469;
+  color: #fafaff;
   font-size: 1.1rem;
   text-align: center;
 }
 
 .dropdown-item:hover {
-  background-color: #532b88;
-  color: #f4effa;
+  background-color: #273469;
+  color: #e4d9ff;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 

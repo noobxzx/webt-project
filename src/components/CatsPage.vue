@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
-    <h1 class="word-header">Random Cats</h1>
-    <div class="search-bar">
-      <button class="regenerate-button" @click="regenerateBreeds">Regenerate</button>
+  <div class="container text-center d-flex flex-column vh-100 pt-5">
+    <h1 class="word-header custom-mb custom-mt">Random Cats</h1>
+    <div class="search-bar mb-5 d-flex justify-content-center">
+      <button class="btn regenerate-button" @click="regenerateBreeds">Regenerate</button>
     </div>
-    <div class="buttons">
-      <ul class="breed-list">
+    <div class="buttons mt-md-4">
+      <ul class="breed-list list-unstyled d-flex flex-wrap justify-content-center gap-3">
         <li v-for="(breed, index) in randomBreeds" :key="index">
-          <button class="breed-button" @click="GetPreview(breed.id)">{{ breed.name }}</button>
+          <button class="btn breed-button" @click="GetPreview(breed.id)">{{ breed.name }}</button>
         </li>
       </ul>
-      <div v-if="showDropdown" class="dropdown-menu" @click="closeDropdown">
+      <div v-if="showDropdown" class="dropdown-menu d-flex align-items-center justify-content-center" @click="closeDropdown">
         <div class="dropdown-content" @click.stop>
-          <img class="drop-item" :src="breedInfo.url" :alt="breedInfo.name" v-if="breedInfo">
+          <img class="drop-item img-fluid" :src="breedInfo.url" :alt="breedInfo.name" v-if="breedInfo">
         </div>
       </div>
     </div>
@@ -79,11 +79,6 @@ export default {
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
-  padding-top: 7.2vh;
   animation: fadeIn 1s ease-in-out;
 }
 
@@ -93,31 +88,29 @@ export default {
   animation: fadeIn 2400ms ease-in-out;
 }
 
+.custom-mt{
+  margin-top: 3vh;
+}
+
+.custom-mb {
+  margin-bottom: 6rem;
+}
+
 .search-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  position: relative;
   width: 100%;
 }
 
 .buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2vh;
   width: 100%;
 }
 
 .regenerate-button {
-  background-color: transparent;
-  color: #f4effa;
+  color: #fafaff;
   padding: 1em 2.8em;
-  border: 1px solid #532b88;
+  background-color: #273469;
+  border: 1px solid #273469;
   border-radius: 0.5em;
   cursor: pointer;
-  margin: 2em;
   font-size: 1.1rem;
   transition: background-color 100ms ease, transform 300ms ease;
   display: flex;
@@ -126,31 +119,20 @@ export default {
 }
 
 .regenerate-button:hover {
+  background-color: transparent;
+  border: 1px solid #273469;
+  color: #fafaff;
   transform: scale(1.07);
 }
 
 .breed-list {
-  list-style-type: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2em;
   animation: fadeIn 1s ease-in-out;
-  flex-wrap: wrap;
-}
-
-.breed-list li {
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  margin: 10px 0;
 }
 
 .breed-button {
-  background-color: #421a6b;
+  background-color: #273469;
   border: none;
-  color: #f4effa;
+  color: #fafaff;
   border-radius: 0.5em;
   padding: 15px 50px;
   font-size: 1rem;
@@ -162,7 +144,9 @@ export default {
 }
 
 .breed-button:hover {
-  background-color: #421a6b;
+  background-color: transparent;
+  border: 1px solid #273469;
+  color: #fafaff;
   transform: scale(1.07);
 }
 
@@ -204,24 +188,11 @@ export default {
     font-size: 2rem;
   }
 
-  .buttons {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-
   .breed-button,
   .regenerate-button {
     width: 70%;
     margin: 1em 0;
     font-size: 1rem;
-  }
-
-  .breed-list {
-    font-size: 1rem;
-    flex-direction: column;
-    align-items: center;
   }
 
   .dropdown-content {

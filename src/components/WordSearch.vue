@@ -135,7 +135,7 @@ export default {
 }
 
 .word-header {
-  color: #f4effa;
+  color: #fafaff;
   font-size: 2.2rem;
   animation: fadeIn 2400ms ease-in-out;
 }
@@ -149,12 +149,12 @@ export default {
 }
 
 .custom-input {
-  color: #9b72cf;
-  background-color: #2f184b;
+  color: #e4d9ff;
+  background-color: #1e2749;
   margin-bottom: 2em;
   margin-top: 2em;
   padding: 1em;
-  border: 1px solid #532b88;
+  border: 1px solid #273469;
   border-radius: 0.5em;
   width: calc(100% - 1em);
   font-size: 1.2rem;
@@ -162,13 +162,13 @@ export default {
 }
 
 .custom-input::placeholder {
-  color: #9b72cf;
+  color: #e4d9ff;
   font-size: 1.2rem;
 }
 
 .custom-input:focus {
-  border-color: #9b72cf;
-  color: #f4effa;
+  border-color: #e4d9ff;
+  color: #fafaff;
   outline: none;
 }
 
@@ -183,8 +183,8 @@ export default {
 }
 
 .custom-button {
-  background-color: #532b88;
-  color: #f4effa;
+  background-color: #273469;
+  color: #fafaff;
   padding: 1em 2.8em;
   border: none;
   border-radius: 0.5em;
@@ -197,12 +197,13 @@ export default {
 }
 
 .custom-button:hover {
-  background-color: #9b72cf;
+  background-color: transparent;
+  border: 1px solid #273469;
   transform: scale(1.05);
 }
 
 .loading {
-  color: #9b72cf;
+  color: #fafaff;
   margin-top: 2em;
   font-size: 1.2rem;
   animation:
@@ -211,7 +212,7 @@ export default {
 }
 
 .results {
-  color: #f4effa;
+  color: #fafaff;
   margin-top: 2em;
   margin-left: 1em;
   text-align: left;
@@ -220,7 +221,7 @@ export default {
 }
 
 .definition {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #fafaff;
   padding-bottom: 1em;
   margin-bottom: 1em;
 }
