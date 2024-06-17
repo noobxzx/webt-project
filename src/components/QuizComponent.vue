@@ -20,9 +20,12 @@
               ]"
                 @click="selectAnswer(answer)"
                 :disabled="showNextButton"
-            >{{ answer }}</button>
+            >{{ answer }}
+            </button>
           </div>
-          <button class="btn next-button" @click="nextQuestion" v-if="showNextButton">Next</button>
+          <div class="button-container" v-if="showNextButton">
+            <button class="btn next-button" @click="nextQuestion">Next</button>
+          </div>
         </div>
         <div v-else class="results">
           <h2>Your Score: {{ score }}/{{ questions.length }}</h2>
@@ -49,6 +52,9 @@ export default {
       score: 0,
       selectedAnswer: null,
       isCorrect: false,
+      retryCount: 0,
+      maxRetries: 3,
+      retryDelay: 1000, // 1 second delay
     };
   },
   created() {
@@ -56,14 +62,28 @@ export default {
   },
   methods: {
     async fetchQuestions() {
+      this.loading = true;
       try {
         const response = await axios.get('https://opentdb.com/api.php?amount=10&category=27');
         this.questions = response.data.results;
         this.setCurrentQuestion();
         this.loading = false;
+        this.retryCount = 0; // Reset retry count on success
       } catch (error) {
-        console.error(error);
+        if (this.shouldRetry(error)) {
+          this.retryCount++;
+          setTimeout(() => {
+            this.fetchQuestions();
+          }, this.retryDelay);
+        } else {
+          console.error(error);
+          this.loading = false;
+        }
       }
+    },
+    shouldRetry(error) {
+      const status = error.response ? error.response.status : null;
+      return (status >= 500 || status === 429) && this.retryCount < this.maxRetries;
     },
     setCurrentQuestion() {
       this.currentQuestion = this.questions[this.currentQuestionIndex];
@@ -91,11 +111,17 @@ export default {
       }
     },
     restartQuiz() {
+      this.loading = true;
       this.currentQuestionIndex = 0;
       this.score = 0;
       this.showResults = false;
-      this.setCurrentQuestion();
       this.showNextButton = false;
+      this.selectedAnswer = null;
+      this.isCorrect = false;
+      this.questions = [];
+      this.currentQuestion = null;
+      this.currentAnswers = [];
+      this.fetchQuestions(); // Fetch new questions
     },
     decodeHTMLEntities(text) {
       const textarea = document.createElement('textarea');
@@ -121,15 +147,16 @@ export default {
 }
 
 .quiz-header {
-  color: #f4effa;
+  color: #fafaff;
   font-size: 2.2rem;
   animation: fadeIn 2400ms ease-in-out;
+  position: relative;
 }
 
 .score-board {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 200px;
+  right: 30px;
   color: #f4effa;
   font-size: 1.2rem;
 }
@@ -139,12 +166,12 @@ export default {
 }
 
 .loading {
-  color: #f4effa;
+  color: #fafaff;
   font-size: 1.5rem;
 }
 
 .question {
-  color: #f4effa;
+  color: #fafaff;
   font-size: 1.5rem;
 }
 
@@ -157,7 +184,7 @@ export default {
 .answer-button {
   background-color: #273469;
   border: none;
-  color: #f4effa;
+  color: #fafaff;
   border-radius: 0.5em;
   padding: 15px 50px;
   font-size: 1rem;
@@ -200,6 +227,12 @@ export default {
   background-color: red !important;
   border: none;
   transform: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .next-button,
@@ -254,8 +287,8 @@ export default {
   }
 
   .score-board {
-    top: 10px;
-    right: 10px;
+    top: 50px; /* Adjust this value as needed to move the score lower */
+    left: 10px;
     font-size: 1rem;
   }
 }
