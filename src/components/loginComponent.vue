@@ -1,38 +1,39 @@
 <template>
-    <div class="container text-center d-flex flex-column align-items-center vh-100 pt-5">
-      <h1 class="login-header mt-5 custom-mb">Login</h1>
-      <div class="login-content custom-mb d-flex flex-column align-items-center">
-        <form @submit.prevent="validateForm" class="w-100">
-          <div class="form-group custom-mb">
-            <input
-                type="text"
-                class="form-control"
-                v-model="username"
-                placeholder="Username"
-                :class="{'is-invalid': usernameError}"
-            />
-            <div class="invalid-feedback">{{ usernameError }}</div>
-          </div>
-          <div class="form-group custom-mb">
-            <input
-                type="password"
-                class="form-control"
-                v-model="password"
-                placeholder="Password"
-                :class="{'is-invalid': passwordError}"
-            />
-            <div class="invalid-feedback">{{ passwordError }}</div>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
-        <div v-if="loginSuccess" class="alert alert-success mt-3" role="alert">
-          Login successful!
+  <div class="container text-center d-flex flex-column align-items-center vh-100 pt-5">
+    <h1 class="login-header mt-5 custom-mb">Login</h1>
+    <div class="login-content d-flex flex-column align-items-center">
+      <form @submit.prevent="validateForm" class="w-100">
+        <div class="form-group custom-mb">
+          <input
+              type="text"
+              class="form-control"
+              v-model="username"
+              placeholder="Username"
+              :class="{'is-invalid': usernameError}"
+          />
+          <div class="invalid-feedback">{{ usernameError }}</div>
         </div>
+        <div class="form-group custom-mb">
+          <input
+              type="password"
+              class="form-control"
+              v-model="password"
+              placeholder="Password"
+              :class="{'is-invalid': passwordError}"
+          />
+          <div class="invalid-feedback">{{ passwordError }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+      <div v-if="loginSuccess" class="alert alert-success mt-5" role="alert">
+        Login successful!
       </div>
     </div>
+  </div>
 </template>
 
 <script>
+import DOMPurify from "dompurify";
 export default {
   data() {
     return {
@@ -45,17 +46,22 @@ export default {
   },
   methods: {
     validateForm: function () {
+      const sanitizedUser = DOMPurify.sanitize(this.username);
+      const sanitizedPassword = DOMPurify.sanitize(this.password);
+      console.log("Sanitized Username: ", sanitizedUser);
+      console.log("Sanitized Password: ", sanitizedPassword);
+
       this.usernameError = '';
       this.passwordError = '';
       const usernameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-      if (!this.username) {
+      if (!sanitizedUser) {
         this.usernameError = 'Username is required.';
-      } else if (!usernameRegex.test(this.username)) {
+      } else if (!usernameRegex.test(sanitizedUser)) {
         this.usernameError = 'Please enter a valid email address.';
       }
 
-      if (!this.password) {
+      if (!sanitizedPassword) {
         this.passwordError = 'Password is required.';
       }
 
@@ -69,13 +75,23 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes buttonHover {
+  from {
+    background-color: #273469;
+  }
+  to {
+    background-color: transparent;
+    border: 1px solid #273469;
   }
 }
 
@@ -92,6 +108,7 @@ export default {
 
 .login-content {
   width: 100%;
+  margin-bottom: 3.5rem;
 }
 
 .form-group {
@@ -111,9 +128,32 @@ export default {
   color: #dc3545;
 }
 
+.form-control{
+  color: #fafaff;
+  background-color: #1a2240 !important;
+  border: 1px solid #273469;
+  border-radius: 0.5em;
+  font-size: 1.1rem;
+  padding: 20px 15px;
+  height: 60px;
+}
+
+.form-control::placeholder {
+  color: #e4d9ff;
+  font-size: 1.1rem;
+}
+
+
+.form-control:focus {
+  color: #fafaff;
+  font-size: 1.1rem;
+  border-color: #e4d9ff;
+  box-shadow: none;
+}
+
 .btn-primary {
+  border: 1px solid #273469;
   background-color: #273469;
-  border: none;
   color: #fafaff;
   border-radius: 0.5em;
   padding: 15px;
@@ -123,12 +163,12 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #1a2746;
+  animation: buttonHover 0.3s forwards;
 }
 
 .alert-success {
   background-color: #28a745;
-  color: white;
+  color: #fafaff;
   border: none;
   border-radius: 0.5em;
   padding: 1rem;

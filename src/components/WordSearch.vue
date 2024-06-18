@@ -6,6 +6,7 @@
         <input
             type="text"
             class="custom-input"
+            :class="{'is-invalid': validationError}"
             v-model="query"
             @keyup="validateInput"
             @keyup.enter="searchWord"
@@ -51,14 +52,14 @@ export default {
       error: null,
       validationError: null,
       loading: false,
-      token: process.env.VUE_APP_RAPIDAPI_KEY
+      token: process.env.VUE_APP_RAPIDAPI_KEY,
     };
   },
   methods: {
     validateInput() {
       const regex = /^[a-zA-Z0-9 ]*$/;
       if (!regex.test(this.query)) {
-        this.validationError = "Only eng and 0-9 symbols are allowed";
+        this.validationError = "Only English letters and numbers are allowed.";
       } else {
         this.validationError = null;
       }
@@ -69,11 +70,16 @@ export default {
         this.wordData = null;
         return;
       }
-      if (this.validationError){
+      if (this.validationError) {
         this.error = "Please enter a valid word";
-        return
+        return;
       }
+
       const sanitizedQuery = DOMPurify.sanitize(this.query);
+
+      // Log the sanitized input to the console
+      console.log("Sanitized Query:", sanitizedQuery);
+
       const options = {
         method: "GET",
         url: `https://wordsapiv1.p.rapidapi.com/words/${sanitizedQuery}`,
@@ -161,6 +167,10 @@ export default {
   transition: border-color 0.3s ease;
 }
 
+.custom-input.is-invalid {
+  border-color: #ca4d4d;
+}
+
 .custom-input::placeholder {
   color: #e4d9ff;
   font-size: 1.2rem;
@@ -179,7 +189,7 @@ export default {
   width: 100%;
   text-align: left;
   margin-top: 1em;
-  left: 1em
+  left: 1em;
 }
 
 .custom-button {
@@ -191,9 +201,7 @@ export default {
   cursor: pointer;
   margin: 1em;
   font-size: 1.1rem;
-  transition:
-      background-color 100ms ease,
-      transform 300ms ease;
+  transition: background-color 100ms ease, transform 300ms ease;
 }
 
 .custom-button:hover {
@@ -206,9 +214,7 @@ export default {
   color: #fafaff;
   margin-top: 2em;
   font-size: 1.2rem;
-  animation:
-      fadeIn 0,
-      5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .results {
@@ -225,7 +231,6 @@ export default {
   padding-bottom: 1em;
   margin-bottom: 1em;
 }
-
 
 .error {
   color: #ca4d4d;
