@@ -2,10 +2,10 @@
   <header class="top-bar">
     <div class="logo">Worod</div>
     <nav class="nav-buttons">
-      <button class="btn btn-link nav-button" @click="navigate('/about')">
+      <button class="btn btn-primary nav-button " @click="navigate('/about')">
         <i class="fas fa-info-circle"></i>
       </button>
-      <button class="btn btn-link nav-button" @click="navigate('/account')">
+      <button class="btn btn-primary nav-button" @click="navigate('/login')">
         <i class="fas fa-user"></i>
       </button>
     </nav>
@@ -58,7 +58,7 @@ export default {
 }
 
 .nav-button {
-  color: #fafaff;
+  color: #fafaff !important;
   background-color: transparent;
   border: none;
   font-size: 1.25rem;
@@ -73,8 +73,8 @@ export default {
 }
 
 .nav-button:hover {
-  background-color: #273469;
-  color: #f4effa;
+  background-color: #273469 !important;
+  color: #fafaff !important;
 }
 
 @media (max-width: 600px) {
@@ -93,6 +93,7 @@ export default {
   .nav-button {
     font-size: 1rem;
     padding: 0.5em 0.75em;
+    --bs-btn-active-color: #fafaff;
   }
 
   .nav-button i {

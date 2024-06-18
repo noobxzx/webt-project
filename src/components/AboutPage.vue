@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="about text-center">
     <h1 class = "header-about">About Page</h1>
     <p class = "text-about">This is the about page.</p>
   </div>
@@ -18,10 +18,10 @@ export default {
 }
 
 .header-about{
-  color: #f4effa;
+  color: #fafaff;
 }
 
 .text-about{
-  color: #f4effa;
+  color: #fafaff;
 }
 </style>
