@@ -1,35 +1,87 @@
 <template>
   <div class="container text-center d-flex flex-column align-items-center vh-100 pt-5">
     <h1 class="quiz-header mt-5 custom-mb">Quiz Time</h1>
-    <div class="score-board">
-      Question {{ currentQuestionIndex + 1 }}/{{ questions.length }} | Score: {{ score }}
-    </div>
-    <div class="quiz-content custom-mb d-flex flex-column align-items-center">
-      <div v-if="loading" class="loading">Loading...</div>
-      <div v-else>
-        <div v-if="!showResults">
-          <div class="question custom-mb">{{ decodeHTMLEntities(currentQuestion.question)}}</div>
-          <div class="answers custom-mb">
-            <button
-                v-for="(answer, index) in currentAnswers"
-                :key="index"
-                :class="['btn', 'answer-button',
-                showNextButton && answer === currentQuestion.correct_answer ? 'btn-success' : '',
-                showNextButton && answer === selectedAnswer && selectedAnswer !== currentQuestion.correct_answer && answer === selectedAnswer ? 'btn-danger' : '',
-                showNextButton && answer !== selectedAnswer && answer !== currentQuestion.correct_answer ? 'btn-default' : ''
-              ]"
-                @click="selectAnswer(answer)"
-                :disabled="showNextButton"
-            >{{ answer }}
-            </button>
-          </div>
-          <div class="button-container" v-if="showNextButton">
-            <button class="btn next-button" @click="nextQuestion">Next</button>
-          </div>
+    <div v-if="!quizStarted" class="setup-container">
+      <div class="custom-mb fade-in">
+        <h2 class="quiz-settings">Select Number of Questions</h2>
+        <div class="answers-q">
+          <label>
+            <input type="radio" value="3" v-model="numberOfQuestions" />
+            3
+          </label>
+          <label>
+            <input type="radio" value="5" v-model="numberOfQuestions" />
+            5
+          </label>
+          <label>
+            <input type="radio" value="10" v-model="numberOfQuestions" />
+            10
+          </label>
         </div>
-        <div v-else class="results">
-          <h2>Your Score: {{ score }}/{{ questions.length }}</h2>
-          <button class="btn restart-button" @click="restartQuiz">Restart</button>
+      </div>
+      <div class="custom-mb fade-in">
+        <h2 class="quiz-settings">Select Category</h2>
+        <div class="answers-q">
+          <label>
+            <input type="radio" value="9" v-model="category" />
+            General Knowledge
+          </label>
+          <label>
+            <input type="radio" value="18" v-model="category" />
+            Science: Computers
+          </label>
+          <label>
+            <input type="radio" value="27" v-model="category" />
+            Animals
+          </label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center fade-in">
+        <button class="btn start-button" @click="startQuiz">Start Quiz</button>
+      </div>
+    </div>
+    <div v-else class="quiz-container">
+      <div class="score-board">
+        Question {{ currentQuestionIndex + 1 }}/{{ questions.length }} | Score: {{ score }}
+      </div>
+      <div class="quiz-content custom-mb d-flex flex-column align-items-center">
+        <div v-if="loading" class="loading">Loading...</div>
+        <div v-else>
+          <div v-if="!showResults">
+            <div class="question custom-mb">{{ decodeHTMLEntities(currentQuestion.question) }}</div>
+            <div class="answers custom-mb">
+              <button
+                  v-for="(answer, index) in currentAnswers"
+                  :key="index"
+                  :class="[
+                  'btn',
+                  'answer-button',
+                  showNextButton && answer === currentQuestion.correct_answer
+                    ? 'btn-success'
+                    : '',
+                  showNextButton && answer === selectedAnswer && selectedAnswer !== currentQuestion.correct_answer
+                    ? 'btn-danger'
+                    : '',
+                  showNextButton && answer !== selectedAnswer && answer !== currentQuestion.correct_answer
+                    ? 'btn-default'
+                    : '',
+                ]"
+                  @click="selectAnswer(answer)"
+                  :disabled="showNextButton"
+              >
+                {{ answer }}
+              </button>
+            </div>
+            <div class="button-container" v-if="showNextButton">
+              <button class="btn next-button" @click="nextQuestion">Next</button>
+            </div>
+          </div>
+          <div v-else class="results">
+            <h2>Your Score: {{ score }}/{{ questions.length }}</h2>
+            <div class="d-flex justify-content-center">
+              <button class="btn restart-button" @click="restartQuiz">Restart</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,29 +98,31 @@ export default {
       currentQuestionIndex: 0,
       currentQuestion: null,
       currentAnswers: [],
-      loading: true,
+      loading: false,
       showNextButton: false,
       showResults: false,
       score: 0,
       selectedAnswer: null,
       isCorrect: false,
+      numberOfQuestions: '5',
+      category: '9',
+      quizStarted: false,
       retryCount: 0,
       maxRetries: 3,
       retryDelay: 1000, // 1 second delay
     };
   },
-  created() {
-    this.fetchQuestions();
-  },
   methods: {
     async fetchQuestions() {
       this.loading = true;
       try {
-        const response = await axios.get('https://opentdb.com/api.php?amount=10&category=27');
+        const response = await axios.get(
+            `https://opentdb.com/api.php?amount=${this.numberOfQuestions}&category=${this.category}`
+        );
         this.questions = response.data.results;
         this.setCurrentQuestion();
         this.loading = false;
-        this.retryCount = 0; // Reset retry count on success
+        this.retryCount = 0;
       } catch (error) {
         if (this.shouldRetry(error)) {
           this.retryCount++;
@@ -99,7 +153,9 @@ export default {
       if (this.isCorrect) {
         this.score++;
       }
-      this.showNextButton = true;
+      setTimeout(() => {
+        this.showNextButton = true;
+      }, 1000);
     },
     nextQuestion() {
       this.currentQuestionIndex++;
@@ -109,6 +165,10 @@ export default {
       } else {
         this.showResults = true;
       }
+    },
+    startQuiz() {
+      this.quizStarted = true;
+      this.fetchQuestions();
     },
     restartQuiz() {
       this.loading = true;
@@ -121,14 +181,14 @@ export default {
       this.questions = [];
       this.currentQuestion = null;
       this.currentAnswers = [];
-      this.fetchQuestions(); // Fetch new questions
+      this.quizStarted = false;
     },
     decodeHTMLEntities(text) {
       const textarea = document.createElement('textarea');
       textarea.innerHTML = text;
       return textarea.value;
     },
-  }
+  },
 };
 </script>
 
@@ -144,6 +204,10 @@ export default {
 
 .container {
   animation: fadeIn 1s ease-in-out;
+}
+
+.setup-container{
+  animation: fadeIn 2400ms ease-in-out;
 }
 
 .quiz-header {
@@ -179,6 +243,22 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.answers-q {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  color: #fafaff;
+  font-size: 1rem;
+}
+
+.quiz-settings {
+  color: #fafaff;
+  font-size: 1.2rem;
 }
 
 .answer-button {
@@ -236,7 +316,8 @@ export default {
 }
 
 .next-button,
-.restart-button {
+.restart-button,
+.start-button {
   color: #f4effa;
   padding: 1em 2.8em;
   background-color: #273469;
@@ -252,7 +333,8 @@ export default {
 }
 
 .next-button:hover,
-.restart-button:hover {
+.restart-button:hover,
+.start-button:hover {
   background-color: transparent;
   transform: scale(1.07);
   color: #f4effa;
@@ -269,6 +351,10 @@ export default {
   margin-bottom: 5rem;
 }
 
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
 @media (max-width: 600px) {
   .container {
     padding-top: 2vh;
@@ -280,7 +366,8 @@ export default {
 
   .answer-button,
   .next-button,
-  .restart-button {
+  .restart-button,
+  .start-button {
     width: 70%;
     margin: 1em 0;
     font-size: 1rem;
