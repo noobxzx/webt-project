@@ -29,10 +29,16 @@ export default {
       randomBreeds: [],
       breedInfo: null,
       showDropdown: false,
+      updateInterval: null
     };
   },
   created() {
     this.fetchBreeds();
+  },
+  beforeUnmount() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
   },
   methods: {
     async fetchBreeds() {
@@ -57,12 +63,38 @@ export default {
         });
         this.breedInfo = response.data[0];
         this.showDropdown = true;
+
+        if (this.updateInterval) {
+          clearInterval(this.updateInterval);
+        }
+
+        this.updateInterval = setInterval(() => {
+          this.updatePreview(id);
+        }, 2500);
+
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async updatePreview(id) {
+      try {
+        const response = await axios.get('https://api.thecatapi.com/v1/images/search', {
+          params: {
+            breed_ids: id
+          }
+        });
+        this.breedInfo = response.data[0];
       } catch (error) {
         console.error(error);
       }
     },
     closeDropdown() {
       this.showDropdown = false;
+
+      // Clear the interval when closing the dropdown
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+      }
     }
   },
 };
